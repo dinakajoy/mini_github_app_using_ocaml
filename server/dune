@@ -1,0 +1,9 @@
+(executable
+ (name server)
+ (libraries app dream))
+ ; (preprocess (pps lwt_ppx ppx_yojson_conv)))
+
+(rule
+ (targets server.ml)
+ (deps server.eml.ml)
+ (action (run dream_eml %{deps} --workspace %{workspace_root})))

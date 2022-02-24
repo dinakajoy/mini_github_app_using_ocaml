@@ -1,0 +1,5 @@
+(executable
+ (name client)
+ (modes js)
+ (libraries js_of_ocaml-lwt ezjsonm brr note str)
+ (preprocess (pps js_of_ocaml-ppx)))
