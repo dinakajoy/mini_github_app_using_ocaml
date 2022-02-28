@@ -12,36 +12,20 @@ module Sync = Irmin.Sync(Store)
 
 module Gql = Irmin_graphql.Server.Make (Cohttp_lwt_unix.Server) (Config) (Store)
 
-let config = Irmin_git.config "./repos" 
-
-(* let remote = Store.remote "git://github.com/mirage/irmin.git" *)
-
-(* let author = "Test <test@test.com>"
-let info fmt = Irmin_unix.info ~author fmt *)
-
 (* Commit information *)
-let info = Irmin_unix.info
+(* let info = Irmin_unix.info *)
 
-let store_repo rep =
-  let+ repo = Store.Repo.v config in
-  let+ t = Store.master repo in
-  let remote = Store.remote rep in 
-  Sync.pull_exn t remote
+let config = Irmin_git.config ~bare:true "./repos" 
 
-let store_repo k v =
+let store_repo data = 
   let* repo = Store.Repo.v config in
+  let remote = Store.remote data in 
   let* t = Store.master repo in
-  let msg = Fmt.str "Updating /%s" (String.concat "/" k) in
-  print_endline msg;
-  Store.set_exn t ~info:(info "%s" msg) k v
+  let* _ = Sync.pull_exn t remote `Set in
+  let+ readme = Store.get t [ "README.md" ] in
+  Printf.printf "%s\n%!" readme;
+  "Done"
 
-(* let store_repo k v =
-  let* repo = Store.Repo.v config in
-  let* t = Store.master repo in
-  let msg = Fmt.str "Updating /%s" (String.concat "/" k) in
-  print_endline msg;
-  Store.set_exn t ~info:(info "%s" msg) k v *)
-
-let schema () = 
-  let+ repo = Store.Repo.v config in
-  Gql.schema repo
+  let schema () = 
+    let+ repo = Store.Repo.v config in
+    Gql.schema repo

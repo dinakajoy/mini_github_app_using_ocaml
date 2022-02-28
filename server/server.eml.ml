@@ -1,9 +1,5 @@
 open Lwt.Syntax
 
-(* type message_object = {
-  message : string;
-} [@@deriving yojson] *)
-
 let home =
   <html>
     <body id="body">
@@ -16,22 +12,17 @@ let home =
   </html>
 
 let main () =
-  let* schema = App.schema "https://github.com/mirage/irmin" in
+  let* schema = App.schema () in
   Dream.serve
   @@ Dream.logger
-  @@ Dream.origin_referer_check
+  (* @@ Dream.origin_referer_check *)
   @@ Dream.router [
     Dream.get "/" (fun _ -> Dream.html home);
 
-    Dream.get "/repo" (fun request ->
-      let%lwt body = Dream.body request in
-      (* let message_object =
-        body *)
-        (* |> Yojson.Safe.from_string *)
-        (* |> message_object_of_yojson *)
-      in
-      App.store_repo body
-    );
+    Dream.post "/repo" (fun request ->
+      let* body = Dream.body request in 
+      let+ res = App.store_repo body in
+      (Dream.response res));
 
     Dream.any "/graphql" (Dream.graphql (fun _ -> Lwt.return ()) schema);
     Dream.get "/graphiql" (Dream.graphiql "/graphql");
