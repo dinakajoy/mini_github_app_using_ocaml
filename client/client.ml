@@ -1,5 +1,5 @@
 open Js_of_ocaml
-open Lwt.Syntax
+(* open Lwt.Syntax *)
 open Brr
 open Brr_io
 open Fut.Syntax
@@ -45,12 +45,12 @@ let post_data url query =
 let get_repo_data url body = 
   let req_body = Jstr.to_string (Jstr.lowercased (Jstr.of_string body)) in
   let* data = post_data url req_body in
-  Console.log [ data ]
+  Fut.return (data)
 
 let save_repo repo =
   let url = "http://localhost:8080/repo" in
-  (* Fut.return (get_repo_data url repo) *)
-  get_repo_data url repo
+  let res = get_repo_data url repo in 
+  Console.log ["res", Fut.await res ]
 
 let () =
   let date_span =  Dom_html.getElementById_exn "date" in
