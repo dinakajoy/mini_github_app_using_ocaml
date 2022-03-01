@@ -2,12 +2,15 @@ open Lwt.Syntax
 
 let home =
   <html>
+    <head><link rel="stylesheet" href="/static/style.css"></head>
     <body id="body">
-    <header>Mini Github</header>
-      <main id="main"></main>
-      </footer>&copy; <span id="date"></span></footer>
+      <header class="header">Mini Github</header>
+      <main class="main">
+        <p>Please paste in a git repository below: </p>
+        <div id="input" class="input"></div>
+      </main>
+      <footer  class="footer">&copy; <span id="date"></span></footer>
       <script src="/static/client.js"></script>
-      <script></script></footer>
     </body>
   </html>
 

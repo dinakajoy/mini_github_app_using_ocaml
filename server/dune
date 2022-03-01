@@ -1,7 +1,6 @@
 (executable
  (name server)
  (libraries app dream))
- ; (preprocess (pps lwt_ppx ppx_yojson_conv)))
 
 (rule
  (targets server.ml)

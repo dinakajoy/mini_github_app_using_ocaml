@@ -1,0 +1,57 @@
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f4f4f4;
+  font-family:Verdana, Geneva, Tahoma, sans-serif
+}
+
+.header {
+  text-align: center;
+  padding: 20px;
+  background-color: #000000c7;
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #000000c7;
+  color: #fff;
+}
+
+.main {
+  width: 100%;
+  margin: 30px auto;
+  min-height: 73vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  display: flex;
+  padding: 20px;
+}
+
+.input input {
+  width: 80%;
+  margin: 0 auto;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #f4f4f4;
+  outline: 0;
+}

@@ -1,12 +1,12 @@
 install:
 	opam install . --deps-only    
 
-run-client:
-	dune build --root . client/client.bc.js  
-	mkdir -p ./static/  
-	cp _build/default/client/client.bc.js static/client.js  
+build:
+	dune build  
 
-run-server:
-	dune build --root . server/server.exe  
-	dune exec --root . server/server.exe   
-	
+start: 
+	dune build  
+	dune exec ./server/server.exe 
+
+run-server-only:  
+	dune exec ./server/server.exe 

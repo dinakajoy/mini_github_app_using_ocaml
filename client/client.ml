@@ -55,7 +55,7 @@ let save_repo repo =
 let () =
   let date_span =  Dom_html.getElementById_exn "date" in
   date_span##.innerHTML := Js.string ("2021");
-  let main = Dom_html.getElementById_exn "main" in
+  let main = Dom_html.getElementById_exn "input" in
   let input = Dom_html.(createInput document) in
   input##.onkeyup := Dom_html.handler (fun v ->
     Js.Opt.iter v##.target (fun t ->
