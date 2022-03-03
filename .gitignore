@@ -1,2 +1,3 @@
 _build/
-repos/
+repos
+static/client.js
