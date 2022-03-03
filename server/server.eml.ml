@@ -16,7 +16,8 @@ let home =
   </html>
 
 let main () =
-  let* schema = App.schema () in 
+  let* repo = App.repo () in
+  let* schema = App.schema repo in 
   Dream.serve 
   @@ Dream.logger 
   (* @@ Dream.origin_referer_check *)
@@ -25,7 +26,7 @@ let main () =
 
     Dream.post "/repo" (fun request ->
       let* body = Dream.body request in 
-      let+ res = App.store_repo body in
+      let+ res = App.sync repo body in
       (Dream.response res));
 
     Dream.any "/graphql" (Dream.graphql (fun _ -> Lwt.return ()) schema);

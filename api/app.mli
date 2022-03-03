@@ -1,7 +1,10 @@
 module Store: Irmin_git.S
 
-val store_repo:string -> string Lwt.t
-(** This store_repo allows to store a git repository *)
+val repo : unit -> Store.repo Lwt.t
+(** Initialise the repository for storing the Github repo *)
 
-val schema:unit -> unit Graphql_lwt.Schema.schema Lwt.t
-(** This schema allows to query and modify a git repository *)
+val sync : Store.repo -> string -> string Lwt.t
+(** [sync repo url] syncs the repository at [url] with the local store. *)
+
+val schema : Store.repo -> unit Graphql_lwt.Schema.schema Lwt.t
+(** This schema allows to query and modify a git repository. *)
