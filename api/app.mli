@@ -1,7 +1,5 @@
 module Store: Irmin_git.S
 
-(* val store_repo:Store.key -> string -> unit Lwt.t *)
-(* val store_repo:string -> unit Lwt.t *)
 val store_repo:string -> string Lwt.t
 (** This store_repo allows to store a git repository *)
 

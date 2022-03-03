@@ -47,6 +47,12 @@ let get_repo_data url body =
   let* data = post_data url req_body in
   Fut.return (data)
 
+let branches = 
+  let div = Dom_html.(createDiv document) in
+  div##.innerHTML := Js.string "Test";
+  let result_element =  Dom_html.getElementById_exn "result" in
+  Dom.appendChild result_element div
+  
 let save_repo repo =
   let url = "http://localhost:8080/repo" in
   let res = get_repo_data url repo in 
@@ -63,5 +69,5 @@ let () =
         save_repo (Js.to_string i##.value))
     );
     Js._true);
-  Dom.appendChild main input;
+  Dom.appendChild main input
   
