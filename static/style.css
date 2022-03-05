@@ -42,9 +42,10 @@ body {
 }
 
 .input {
-  width: 100%;
+  width: 80%;
   display: flex;
   padding: 20px;
+  margin: 0 auto;
 }
 
 .input input {
@@ -53,5 +54,16 @@ body {
   padding: 10px;
   background-color: #fff;
   border: 1px solid #f4f4f4;
+  outline: 0;
+}
+
+.input button {
+  cursor: pointer;
+  width: 20%;
+  margin: 0 auto;
+  padding: 10px;
+  color: #fff;
+  background-color: #0a0202;
+  border: 1px solid #0a0202;
   outline: 0;
 }
