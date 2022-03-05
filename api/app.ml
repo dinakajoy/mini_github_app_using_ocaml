@@ -1,22 +1,18 @@
 open Lwt.Syntax
-(* open Sys *)
-(* open Lwt.Infix *)
 
 (* Irmin store with string contents *)
 module Store = Irmin_unix.Git.FS.KV (Irmin.Contents.String)
 
-(* module Sync = Irmin.Sync.Make (Store) *)
+(* Module to synchronize local store with remote store *)
 module Sync = Irmin.Sync (Store)
 
 module Config = struct
-  (* type info = Store.info *)
-
   let remote = None
 
   let info = Irmin_unix.info
 end
 
-module Gql = Irmin_graphql.Server.Make (Cohttp_lwt_unix.Server) (Config) (Store)
+module Graphql_Server = Irmin_graphql.Server.Make (Cohttp_lwt_unix.Server) (Config) (Store)
 
 let store_location = "./repos"
 
@@ -55,4 +51,4 @@ let sync repo data =
   "Done"
 
 let schema repo =
-  Lwt.return @@ Gql.schema repo
+  Lwt.return @@ Graphql_Server.schema repo

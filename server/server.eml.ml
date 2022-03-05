@@ -7,7 +7,10 @@ let home =
       <header class="header">Mini Github</header>
       <main class="main">
         <p>Please paste in a git repository below: </p>
-        <div id="input" class="input"></div>
+        <div class="input">
+          <input type="text" id="input" />
+          <button type="submit" id="submit">Submit</button>
+        </div>
         <div id="result" class="result"></div>
       </main>
       <footer  class="footer">&copy; <span id="date"></span></footer>

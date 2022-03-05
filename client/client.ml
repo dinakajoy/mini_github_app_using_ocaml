@@ -1,19 +1,7 @@
 open Js_of_ocaml
-(* open Lwt.Syntax *)
 open Brr
 open Brr_io
 open Fut.Syntax
-
-(* let send_repo_query repo =
-  let query = {|
-    {
-      repository(name: "|} ^ repo ^ {|") {
-        name
-      }
-    }
-  |}
-  in
-  Ezjsonm.value_to_string (`O [ "query", `String query ]) *)
 
 let post_data url query =
   let req_url = Jstr.of_string url in 
@@ -47,27 +35,39 @@ let get_repo_data url body =
   let* data = post_data url req_body in
   Fut.return (data)
 
-let branches = 
-  let div = Dom_html.(createDiv document) in
-  div##.innerHTML := Js.string "Test";
-  let result_element =  Dom_html.getElementById_exn "result" in
-  Dom.appendChild result_element div
-  
+let display_result result = 
+  let result_element =  (Document.find_el_by_id G.document) (Jstr.v "result") in
+  match result_element with
+  | Some v ->  El.set_prop (El.Prop.jstr (Jstr.v "innerHTML")) (Jstr.v result) v;
+  | None -> ()
+
 let save_repo repo =
   let url = "http://localhost:8080/repo" in
-  let res = get_repo_data url repo in 
-  Console.log ["res", Fut.await res ]
+  let res = Fut.await (get_repo_data url repo) in 
+  (* if res == "Done"
+    then display_result "Please paste in a valid git repository"
+  else display_result "Sorry, there was an error" *)
+  Console.log ["res", res ]
+
+let get_set_repo _ = 
+  let input =  (Document.find_el_by_id G.document) (Jstr.v "input") in
+  match input with
+  | Some element -> 
+    let data = Jstr.to_string (El.prop El.Prop.value element) in
+    if data == "" 
+      then display_result "Please paste in a valid git repository"
+    else save_repo data
+  | None -> ()
+  
+let set_date () = 
+  let date_span =  (Document.find_el_by_id G.document) (Jstr.v "date") in
+  match date_span with
+  | Some v ->  El.set_prop (El.Prop.jstr (Jstr.v "innerHTML")) (Jstr.v "2022") v;
+  | None -> ()
 
 let () =
-  let date_span =  Dom_html.getElementById_exn "date" in
-  date_span##.innerHTML := Js.string ("2021");
-  let main = Dom_html.getElementById_exn "input" in
-  let input = Dom_html.(createInput document) in
-  input##.onkeyup := Dom_html.handler (fun v ->
-    Js.Opt.iter v##.target (fun t ->
-      Js.Opt.iter (Dom_html.CoerceTo.input t) (fun i ->
-        save_repo (Js.to_string i##.value))
-    );
-    Js._true);
-  Dom.appendChild main input
-  
+  set_date ();
+  let submit =  (Document.find_el_by_id G.document) (Jstr.v "submit") in
+  match submit with
+  | Some el ->  Ev.listen Ev.click get_set_repo (El.as_target el)
+  | None -> ()
