@@ -3,6 +3,11 @@
     (deps ../client/client.bc.js)
     (targets client.js)
     (mode promote)
+    (action (copy %{deps} %{targets})))
+  (rule 
+    (deps ../client/repo_data.bc.js)
+    (targets repo_data.js)
+    (mode promote)
     (action (copy %{deps} %{targets}))))
 
 (data_only_dirs repo)

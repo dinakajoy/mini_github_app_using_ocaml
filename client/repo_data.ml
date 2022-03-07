@@ -10,7 +10,8 @@ let display_result result =
 
 let format_result data = 
   match data with
-  | Some _ -> display_result "Saved..."
+  | Some data -> 
+    Console.log[data]
   | None -> display_result "There was an error"
 
 let post_data url query =
@@ -50,26 +51,13 @@ let repo_query =
   |}
   in
   Ezjsonm.value_to_string (`O [ "query", `String query ])
-  
-let save_repo repo =
-  display_result "";
-  let url = "http://localhost:8080/repo" in
-  let req_body = Jstr.to_string (Jstr.lowercased (Jstr.of_string repo)) in
-  post_data url req_body
 
-let set_repo _ = 
-  let input =  (Document.find_el_by_id G.document) (Jstr.v "input") in
-  match input with
-  | Some element -> 
-    let users_repo = Jstr.to_string (El.prop El.Prop.value element) in
-    if (Jstr.is_empty (Jstr.of_string users_repo)) 
-      then display_result "Please paste in a valid git repository"
-    else 
-      let result = save_repo users_repo in
-      Fut.await result format_result;
-      (* Fetch.Request.Redirect.follow (Jstr.of_string "/repo-data"); *)
-  | None -> ()
-  
+let branches () = 
+  display_result "";
+  let url = "http://localhost:8080/graphql" in 
+  let result = post_data url repo_query in
+  Fut.await result format_result
+   
 let set_date () = 
   let date_span =  (Document.find_el_by_id G.document) (Jstr.v "date") in
   match date_span with
@@ -78,7 +66,4 @@ let set_date () =
 
 let () =
   set_date ();
-  let submit =  (Document.find_el_by_id G.document) (Jstr.v "submit") in
-  match submit with
-  | Some el ->  Ev.listen Ev.click set_repo (El.as_target el);
-  | None -> ()
+  branches ()

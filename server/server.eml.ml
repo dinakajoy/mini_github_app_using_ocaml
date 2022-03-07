@@ -18,6 +18,20 @@ let home =
     </body>
   </html>
 
+let repo_result =
+  <html>
+    <head><link rel="stylesheet" href="/static/style.css"></head>
+    <body id="body">
+      <header class="header">Mini Github</header>
+      <main class="main">
+        <div><a href="/">Go Home</a></div>
+        <div id="result" class="result"></div>
+      </main>
+      <footer  class="footer">&copy; <span id="date"></span></footer>
+      <script src="/static/repo_data.js"></script>
+    </body>
+  </html>
+
 let main () =
   let* repo = App.repo () in
   let* schema = App.schema repo in 
@@ -26,6 +40,8 @@ let main () =
   (* @@ Dream.origin_referer_check *)
   @@ Dream.router [
     Dream.get "/" (fun _ -> Dream.html home);
+
+    Dream.get "/repo-data" (fun _ -> Dream.html repo_result);
 
     Dream.post "/repo" (fun request ->
       let* body = Dream.body request in 

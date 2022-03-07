@@ -1,5 +1,5 @@
-(executable
- (name client)
+(executables
+ (names client repo_data)
  (modes js)
  (libraries js_of_ocaml-lwt ezjsonm brr note str)
  (preprocess (pps js_of_ocaml-ppx)))
