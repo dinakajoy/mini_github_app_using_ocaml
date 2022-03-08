@@ -10,12 +10,20 @@ let display_result result =
 
 let format_result data = 
   match data with
-  | Some _ -> display_result "Saved..."
+  | Some _ -> Window.set_location G.window (Uri.v (Jstr.v "/repo-data"))
   | None -> display_result "There was an error"
 
-let post_data url query =
+let get_response_data response =
+  let* data = Fetch.Body.json (Fetch.Response.as_body response) in
+  match data with
+  | Ok response -> Fut.return (Some response)
+  | Error e -> 
+    Console.error [ "error", e ];
+    Fut.return None
+
+let post_data url req_query =
   let req_url = Jstr.of_string url in 
-  let req_query = Jstr.of_string query in 
+  let req_query = Jstr.of_string req_query in 
   let init =
     Fetch.Request.init
       ~method':(Jstr.of_string "POST")
@@ -27,34 +35,15 @@ let post_data url query =
   in
   let* result = Fetch.url ~init req_url in
   match result with
-  | Ok response -> 
-    (let* data = Fetch.Body.json (Fetch.Response.as_body response) in
-    match data with
-    | Ok response -> Fut.return (Some response)
-    | Error _ -> Fut.return None)
-  | Error _ -> Fut.return None
-
-let repo_query =
-  let query = {|
-    {
-      branches {
-      name
-      head {
-        info {
-          date
-          author
-          message
-        }
-      }
-    }
-  |}
-  in
-  Ezjsonm.value_to_string (`O [ "query", `String query ])
+  | Ok response -> get_response_data response
+  | Error e -> 
+    Console.log["e", e];
+    Fut.return None
   
-let save_repo repo =
+let save_repo req_body =
   display_result "";
   let url = "http://localhost:8080/repo" in
-  let req_body = Jstr.to_string (Jstr.lowercased (Jstr.of_string repo)) in
+  let req_body = Jstr.to_string (Jstr.lowercased (Jstr.of_string req_body)) in
   post_data url req_body
 
 let set_repo _ = 
@@ -67,7 +56,6 @@ let set_repo _ =
     else 
       let result = save_repo users_repo in
       Fut.await result format_result;
-      (* Fetch.Request.Redirect.follow (Jstr.of_string "/repo-data"); *)
   | None -> ()
   
 let set_date () = 

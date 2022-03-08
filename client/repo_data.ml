@@ -11,7 +11,7 @@ let display_result result =
 let format_result data = 
   match data with
   | Some data -> 
-    Console.log[data]
+    Console.log["data", data]
   | None -> display_result "There was an error"
 
 let post_data url query =
@@ -39,12 +39,13 @@ let repo_query =
   let query = {|
     {
       branches {
-      name
-      head {
-        info {
-          date
-          author
-          message
+        name
+        head {
+          info {
+            date
+            author
+            message
+          }
         }
       }
     }

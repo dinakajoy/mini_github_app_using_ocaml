@@ -44,9 +44,11 @@ let main () =
     Dream.get "/repo-data" (fun _ -> Dream.html repo_result);
 
     Dream.post "/repo" (fun request ->
+      Dream.log "Body %s!" (Dream.client request);
       let* body = Dream.body request in 
       let+ res = App.sync repo body in
       (Dream.response res));
+      
 
     Dream.any "/graphql" (Dream.graphql (fun _ -> Lwt.return ()) schema);
     Dream.get "/graphiql" (Dream.graphiql "/graphql");
