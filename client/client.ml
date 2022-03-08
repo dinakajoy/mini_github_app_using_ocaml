@@ -10,15 +10,15 @@ let display_result result =
 
 let format_result data = 
   match data with
-  | Some _ -> Window.set_location G.window (Uri.v (Jstr.v "/repo-data"))
+  | Some _ -> Window.set_location G.window (Uri.v (Jstr.v "http://localhost:8080/repo-data"))
   | None -> display_result "There was an error"
 
 let get_response_data response =
-  let* data = Fetch.Body.json (Fetch.Response.as_body response) in
+  let* data = Fetch.Body.text (Fetch.Response.as_body response) in
   match data with
   | Ok response -> Fut.return (Some response)
   | Error e -> 
-    Console.error [ "error", e ];
+    Console.error [ Jstr.v "Error!", Jv.Error.message e ];
     Fut.return None
 
 let post_data url req_query =
