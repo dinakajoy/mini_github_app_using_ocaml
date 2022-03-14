@@ -1,41 +1,91 @@
 open Brr
-open Brr_io
-open Fut.Syntax
+open Ezjsonm
 
-let display_result result = 
-  let result_element =  (Document.find_el_by_id G.document) (Jstr.v "result") in
-  match result_element with
-  | Some v ->  El.set_prop (El.Prop.jstr (Jstr.v "innerHTML")) (Jstr.v result) v
-  | None -> ()
+type package = {
+  branch : string; 
+  date : string
+  }
+
+let get_string key l =
+  match List.assoc key l with `String s -> s | _ -> raise Not_found
+
+    (* let p_class = Jstr.v "myclass" in 
+      let branch = get_string "name" data in 
+      let p1 = [El.txt (Jstr.v branch)] in 
+      let p1 = El.h1 ~at:At.[class' p_class] p1 in 
+      Shared.display_element [p1];
+      Console.log ["p1", p1]
+      let date = get_string "date" data in 
+      let p2 = [El.txt (Jstr.v date)] in 
+      let p2 = El.h1 ~at:At.[class' p_class] p2 in 
+      Shared.display_element [p2];
+      Console.log ["p2", p2];
+      let author = get_string "author" data in 
+      let p3 = [El.txt (Jstr.v author)] in 
+      let p3 = El.h1 ~at:At.[class' p_class] p3 in 
+      Shared.display_element [p3];
+      Console.log ["p3", p3];
+      let message = get_string "message" data in 
+      let p4 = [El.txt (Jstr.v message)] in 
+      let p4 = El.h1 ~at:At.[class' p_class] p4 in 
+      Shared.display_element [p4];
+      Console.log ["p4", p4] *)
+
+(* let display_pkgs { branch; date } = 
+  let p_class = Jstr.v "myclass" in 
+  let p1 = [El.txt (Jstr.v branch)] in 
+  let p1 = El.h1 ~at:At.[class' p_class] p1 in 
+  Shared.display_element [p1];
+  Console.log ["p1", p1];
+  let p2 = [El.txt (Jstr.v date)] in 
+  let p2 = El.h1 ~at:At.[class' p_class] p2 in 
+  Shared.display_element [p2];
+  Console.log ["p2", p2] *)
+
+let func l = 
+  match l with 
+  | `O d -> Console.log ["d", d]
+  | `String d -> Console.log ["d", d]
+  | _ -> Console.log [ "None", l ]
+
+let style_result repo_data =
+  let data = Jstr.to_string repo_data in 
+  let json = from_string data in
+  let json = find json [ "data"; "branches" ] in 
+  match json with 
+  | json -> func json;
+    Console.log [ "data", data ]
+  | _ -> Console.log [ "None" ]
+
+(* {
+  branches {
+    name
+    head {
+      info {
+        date
+        author
+        message
+      }
+    }
+  }
+  master {
+    tree {
+      get_contents(key: "README.md") {
+        key
+        metadata
+        value
+        hash
+      }
+    }
+  }
+} *)
 
 let format_result data = 
   match data with
-  | Some data -> 
-    Console.log["data", data]
-  | None -> display_result "There was an error"
+  | Some data -> style_result data
+  | None -> Shared.display_text "There was an error"
 
-let post_data url query =
-  let req_url = Jstr.of_string url in 
-  let req_query = Jstr.of_string query in 
-  let init =
-    Fetch.Request.init
-      ~method':(Jstr.of_string "POST")
-      ~body:(Fetch.Body.of_jstr req_query)
-      ~headers:
-        (Fetch.Headers.of_assoc
-           [ Jstr.of_string "Content-Type", Jstr.of_string "application/json" ])
-      ()
-  in
-  let* result = Fetch.url ~init req_url in
-  match result with
-  | Ok response -> 
-    (let* data = Fetch.Body.json (Fetch.Response.as_body response) in
-    match data with
-    | Ok response -> Fut.return (Some response)
-    | Error _ -> Fut.return None)
-  | Error _ -> Fut.return None
-
-let repo_query =
+let repo_query = 
   let query = {|
     {
       branches {
@@ -48,23 +98,27 @@ let repo_query =
           }
         }
       }
+      master {
+        tree {
+          get_contents(key: "README.md") {
+            key
+            metadata
+            value
+            hash
+          }
+        }
+      }
     }
   |}
   in
   Ezjsonm.value_to_string (`O [ "query", `String query ])
 
 let branches () = 
-  display_result "";
+  Shared.display_text "";
   let url = "http://localhost:8080/graphql" in 
-  let result = post_data url repo_query in
+  let result = Shared.post_data url repo_query in 
   Fut.await result format_result
-   
-let set_date () = 
-  let date_span =  (Document.find_el_by_id G.document) (Jstr.v "date") in
-  match date_span with
-  | Some v ->  El.set_prop (El.Prop.jstr (Jstr.v "innerHTML")) (Jstr.v "2022") v;
-  | None -> ()
 
 let () =
-  set_date ();
+  Shared.set_date ();
   branches ()

@@ -1,0 +1,3 @@
+(library
+ (name shared)
+ (libraries js_of_ocaml-lwt ezjsonm brr note str))
