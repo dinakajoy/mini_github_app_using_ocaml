@@ -17,7 +17,7 @@ let display_text result =
 let display_element result = 
   let result_element =  (Document.find_el_by_id G.document) (Jstr.v "result") in
   match result_element with
-  | Some v -> El.set_children v result
+  | Some v -> El.append_children v result
   | None -> ()
 
 let get_response_data response =
