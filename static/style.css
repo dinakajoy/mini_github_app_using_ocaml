@@ -13,6 +13,10 @@ body {
   font-family:Verdana, Geneva, Tahoma, sans-serif
 }
 
+h1 {
+  font-size: 1.2rem;
+}
+
 .header {
   text-align: center;
   padding: 20px;
@@ -66,4 +70,21 @@ body {
   background-color: #0a0202;
   border: 1px solid #0a0202;
   outline: 0;
+}
+
+.result {
+  width: 80%;
+  margin: 30px auto;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.readme {
+  margin-top: 20px;
+  line-height: 1.8;
 }
