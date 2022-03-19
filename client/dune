@@ -1,5 +1,5 @@
 (executables
  (names client repo_data)
  (modes js)
- (libraries shared js_of_ocaml-lwt ezjsonm brr note str)
+ (libraries shared js_of_ocaml-lwt ezjsonm brr omd)
  (preprocess (pps js_of_ocaml-ppx)))
