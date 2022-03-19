@@ -9,4 +9,4 @@ jobs:
         uses: ocaml/setup-ocaml@v2
       - run: opam install . --deps-only
       - run: rm -rf repos/
-      - run: dune build
+      - run: opam exec -- dune 
