@@ -1,5 +1,5 @@
-name: simple-mini-github
-on: [push, pull_request]
+name: simple_mini_github
+on: [push]
 
 jobs:
   build:
