@@ -5,8 +5,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: ocaml/setup-ocaml@v2
       - name: Build application
+        uses: ocaml/setup-ocaml@v2
       - run: opam install . --deps-only
       - run: rm -rf repos/
       - run: dune build
