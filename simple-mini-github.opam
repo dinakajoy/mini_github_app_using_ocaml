@@ -16,6 +16,6 @@ depends: [
   "js_of_ocaml-ppx"
   "ezjsonm" {>= "1.3.0"}
   "brr" {>= "0.0.2"}
-  "irmin" {>= "2.9.1"}
+  "irmin" {= "2.9.1"}
   "ocaml" {>= "4.13.1"}
 ]

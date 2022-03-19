@@ -1,4 +1,4 @@
-name: mini-github
+name: simple-mini-github
 on: [push, pull_request]
 
 jobs:
