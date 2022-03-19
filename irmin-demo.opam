@@ -10,25 +10,12 @@ bug-reports: "https://github.com/dinakajoy/simple_mini_github/issues"
 author: "Odinaka Joy <dinakajoy@gmail.com> and Patrick Ferris <pf341@patricoferris.com>"
 
 depends: [
-  "dream"
+  "dream" {= "1.0.0~alpha2"}
   "dune" {>= "2.8.0"} 
   "js_of_ocaml-lwt" {= "3.11.0"}
   "js_of_ocaml-ppx"
   "ezjsonm" {>= "1.3.0"}
   "brr" {>= "0.0.2"}
-  "note"
-  "str"
-  "astring"
-  "cohttp"
-  "fmt"
-  "git"
   "irmin" {>= "2.9.1"}
-  "irmin-git"
-  "irmin-unix"
-  "ppx_irmin"
-  "lwt"
-  "lwt.unix"
-  "graphql-lwt"
-  "dream"
   "ocaml" {>= "4.13.1"}
 ]

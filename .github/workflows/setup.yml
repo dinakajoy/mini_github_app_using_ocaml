@@ -1,0 +1,12 @@
+name: mini-github
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ocaml/setup-ocaml@v2
+      - name: Build application
+      - run: opam install . --deps-only
+      - run: rm -rf repos/
+      - run: dune build
