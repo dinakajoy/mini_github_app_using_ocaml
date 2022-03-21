@@ -19,5 +19,6 @@ depends: [
   "brr" {>= "0.0.2"}
   "omd" {>= "2.0.0~alpha2"}
   "irmin" {= "2.9.1"}
+  "irmin-unix" {= "2.9.1"}
   "ocaml" {>= "4.13.1"}
 ]
