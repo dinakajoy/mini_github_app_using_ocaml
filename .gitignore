@@ -1,4 +1,5 @@
-_build/
-repos
-static/client.js
-static/repo_data.js
+.vscode 
+_build/ 
+repos 
+static/client.js 
+static/repo_data.js 

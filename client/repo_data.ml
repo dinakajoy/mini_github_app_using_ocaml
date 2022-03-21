@@ -1,11 +1,6 @@
 open Brr
 open Ezjsonm
 
-type package = {
-  branch : string; 
-  date : string
-  }
-
 let get_string key l =
   match List.assoc key l with `String s -> s | _ -> raise Not_found
 
