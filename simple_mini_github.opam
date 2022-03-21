@@ -1,4 +1,4 @@
-opam-version: "2.8"
+opam-version: "2.0"
 
 synopsis: "A mini-github applicatio"
 description: "This application is a sample project on how to combine irmin-graphql with dream and display queries on he browser using js_of_ocaml"
@@ -8,6 +8,7 @@ homepage: "https://github.com/dinakajoy/simple_mini_github"
 bug-reports: "https://github.com/dinakajoy/simple_mini_github/issues"
 
 author: "Odinaka Joy <dinakajoy@gmail.com> and Patrick Ferris <pf341@patricoferris.com>"
+maintainer: "Odinaka Joy <dinakajoy@gmail.com> and Patrick Ferris <pf341@patricoferris.com>"
 
 depends: [
   "dream" {= "1.0.0~alpha2"}
