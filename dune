@@ -1,10 +1,3 @@
-((executables
- (names app)
- (public_names )
- (libraries ))
-  (name simple_mini_github)
-  (public_name simple_mini_github))
-
 (subdir static/
   (rule 
     (deps ../client/client.bc.js)
