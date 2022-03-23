@@ -4,7 +4,7 @@ let home =
   <html>
     <head><link rel="stylesheet" href="/static/style.css"></head>
     <body id="body">
-      <header class="header">Mini Github</header>
+      <header class="header"><h1>Mini Github</h1></header>
       <main class="main">
         <p>Please paste in a git repository below: </p>
         <div class="input">
@@ -37,7 +37,6 @@ let main () =
   let* schema = App.schema repo in 
   Dream.serve 
   @@ Dream.logger 
-  (* @@ Dream.origin_referer_check *)
   @@ Dream.router [
     Dream.get "/" (fun _ -> Dream.html home);
 

@@ -1,8 +1,15 @@
 open Brr
-open Ezjsonm
+open Yojson.Basic
 
 let get_string key l =
   match List.assoc key l with `String s -> s | _ -> raise Not_found
+
+let find t path =
+  let rec aux j p = match p, j with
+    | [], j -> j
+    | h::tl, `Assoc o -> aux (List.assoc h o) tl
+    | _ -> raise Not_found in
+  aux t path
 
 let display_data data text = 
   let span = El.span [El.txt (Jstr.v text)] in 
@@ -10,9 +17,9 @@ let display_data data text =
   | `String mydata -> 
     let elem_class = Jstr.v "myclass" in 
     let content = [El.txt (Jstr.v mydata)] in 
-    let h1 = El.h1 ~at:At.[class' elem_class] content in 
+    let h2 = El.h2 ~at:At.[class' elem_class] content in 
     let div = El.div ~at:At.[class' (Jstr.v  "wrapper")] [] in
-    El.append_children div [span; h1];
+    El.append_children div [span; h2];
     Shared.display_element [div]
   | _ -> 
     let txt = "Error! Expected a string!" in
@@ -23,13 +30,13 @@ let display_data data text =
     El.append_children div [span; p];
     Shared.display_element [div]
 
-let style_result repo_data =
+let style_result repo_data = 
   let data = Jstr.to_string repo_data in 
   let json = from_string data in 
   let branches_json = find json [ "data"; "branches" ] in 
   match branches_json with 
-  | `A [] -> Shared.display_text "Empty branch(es)!"
-  | `A (branch :: _) -> 
+  | `List [] -> Shared.display_text "Empty branch(es)!"
+  | `List (branch :: _) -> 
     begin
       let date = find branch [ "head"; "info"; "date" ] in 
       display_data date "Date: ";
@@ -42,7 +49,7 @@ let style_result repo_data =
 
 let style_result2 repo_data =
   let data = Jstr.to_string repo_data in 
-  let json = from_string data in 
+  let json = from_string data in
   let readme = find json [ "data"; "master"; "tree"; "get_contents"; "value" ] in
   match readme with 
   | `String s -> 
@@ -85,7 +92,7 @@ let repo_query =
     }
   |}
   in
-  Ezjsonm.value_to_string (`O [ "query", `String query ])
+  Yojson.Safe.to_string (`Assoc [ "query", `String query ])
 
 let branches () = 
   Shared.display_text "";

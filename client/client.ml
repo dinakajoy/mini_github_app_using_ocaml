@@ -1,5 +1,7 @@
 open Brr
 
+let submit_btn = (Document.find_el_by_id G.document) (Jstr.v "submit")
+
 let format_result data = 
   match data with
   | Some _ -> Window.set_location G.window (Uri.v (Jstr.v "http://localhost:8080/repo-data"))
@@ -25,7 +27,7 @@ let set_repo _ =
   
 let () =
   Shared.set_date ();
-  let submit =  (Document.find_el_by_id G.document) (Jstr.v "submit") in
+  let submit =  submit_btn in
   match submit with
   | Some el ->  Ev.listen Ev.click set_repo (El.as_target el);
   | None -> ()
