@@ -34,16 +34,6 @@ A simple app to test out `irmin-graphql`, `dream` and `js_of_ocaml`
           hash
         }
       }
-      head {
-        tree {
-          ... on Contents {
-            key
-          }
-          ... on Node {
-            key
-          }
-        }
-      }
     }
   }
 ```
