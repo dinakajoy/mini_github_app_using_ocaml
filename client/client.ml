@@ -29,5 +29,5 @@ let () =
   Shared.set_date ();
   let submit =  submit_btn in
   match submit with
-  | Some el ->  Ev.listen Ev.click set_repo (El.as_target el);
+  | Some el ->  ignore(Ev.listen Ev.click set_repo (El.as_target el));
   | None -> ()

@@ -52,6 +52,6 @@ let main () =
 
     Dream.get "/static/**" (Dream.static "./static");
   ]
-  @@ Dream.not_found
+  (* @@ Dream.not_found *)
 
 let () = Lwt_main.run (main ())

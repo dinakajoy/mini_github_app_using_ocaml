@@ -1,12 +1,14 @@
 open Lwt.Syntax
 
 (* Irmin store with string contents *)
-module Store = Irmin_unix.Git.FS.KV (Irmin.Contents.String)
+module Store = Irmin_git_unix.FS.KV (Irmin.Contents.String)
+(* module Store = Irmin_unix.Git.FS.KV (Irmin.Contents.String) *)
 
 (* Module to synchronize local store with remote store *)
-module Sync = Irmin.Sync (Store)
+module Sync = Irmin.Sync.Make (Store)
 
 module Config = struct
+  type info =  Sync.info
   let remote = None
 
   let info = Irmin_unix.info
@@ -42,8 +44,8 @@ let clear_repo () =
 (* Syncing resets the repository and pulls in the new data from the specified remote. *)
 let sync repo data = 
   let* () = clear_repo () in
-  let* t = Store.master repo in
-  let remote = Store.remote data in
+  let* t = Store.main repo in
+  let* remote = Store.remote data in
   let* status = Sync.pull t remote `Set in
   check_status status;
   let+ readme = Store.get t [ "README.md" ] in
