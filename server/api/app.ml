@@ -2,7 +2,6 @@ open Lwt.Syntax
 
 (* Irmin store with string contents *)
 module Store = Irmin_git_unix.FS.KV (Irmin.Contents.String)
-(* module Store = Irmin_unix.Git.FS.KV (Irmin.Contents.String) *)
 
 (* Module to synchronize local store with remote store *)
 module Sync = Irmin.Sync.Make (Store)
@@ -24,8 +23,8 @@ let config = Irmin_git.config ~bare:true store_location
    Grahpql schema to work. *)
 let repo () = Store.Repo.v config
 
-let check_status = 
-  Dream.log "Sync status: %a" (Fmt.result ~ok:Sync.pp_status ~error:Sync.pp_pull_error)
+(* let check_status = 
+  Dream.log "Sync status: %a" (Fmt.result ~ok:Sync.pp_status ~error:Sync.pp_pull_error) *)
 
 (* Here we clear the underlying git store in preparation for a [Sync.pull], this ensures
    the repository is empty before the pull otherwise if a different remote is given it will
@@ -41,14 +40,33 @@ let clear_repo () =
       Dream.log "Store error: %a" Store.Git.pp_error err;
       failwith "err"
 
+let info = Irmin_git_unix.info
+
+let path2 = "git://github.com/mirage/ocaml-git.git"
+
 (* Syncing resets the repository and pulls in the new data from the specified remote. *)
-let sync repo data = 
+(* let sync repo path = 
+  Printf.printf "================ %s\n%!" path;
   let* () = clear_repo () in
   let* t = Store.main repo in
-  let* remote = Store.remote data in
+  let* remote = Store.remote path in
   let* status = Sync.pull t remote `Set in
   check_status status;
   let+ readme = Store.get t [ "README.md" ] in
+  Printf.printf "%s\n%!" readme;
+  "Done" *)
+
+let sync repo path = 
+  Printf.printf "================ %s\n%!" path;
+  let* () = clear_repo () in
+  let* t = Store.of_branch repo "master" in
+  let* upstream = Store.remote path2 in
+  let* _ = Sync.pull_exn t upstream `Set in
+  let* readme = Store.get t [ "README.md" ] in
+  let* tree = Store.get_tree t [] in
+  let* tree = Store.Tree.add tree [ "BAR.md" ] "Hoho!" in
+  let* tree = Store.Tree.add tree [ "FOO.md" ] "Hihi!" in
+  let+ () = Store.set_tree_exn t ~info:(info "merge") [] tree in
   Printf.printf "%s\n%!" readme;
   "Done"
 

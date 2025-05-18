@@ -50,7 +50,7 @@ let style_result repo_data =
 let style_result2 repo_data =
   let data = Jstr.to_string repo_data in 
   let json = from_string data in
-  let readme = find json [ "data"; "master"; "tree"; "get_contents"; "value" ] in
+  let readme = find json [ "data"; "main"; "tree"; "get_contents"; "value" ] in
   match readme with 
   | `String s -> 
     let elem_class = Jstr.v "readme" in 
@@ -79,10 +79,9 @@ let repo_query =
           }
         }
       }
-      master {
+      main {
         tree {
-          get_contents(key: "README.md") {
-            key
+          get_contents(path:"/README.md")
             metadata
             value
             hash
