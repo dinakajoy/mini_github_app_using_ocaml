@@ -23,8 +23,8 @@ let config = Irmin_git.config ~bare:true store_location
    Grahpql schema to work. *)
 let repo () = Store.Repo.v config
 
-(* let check_status = 
-  Dream.log "Sync status: %a" (Fmt.result ~ok:Sync.pp_status ~error:Sync.pp_pull_error) *)
+let check_status = 
+  Dream.log "Sync status: %a" (Fmt.result ~ok:Sync.pp_status ~error:Sync.pp_pull_error)
 
 (* Here we clear the underlying git store in preparation for a [Sync.pull], this ensures
    the repository is empty before the pull otherwise if a different remote is given it will
@@ -40,13 +40,8 @@ let clear_repo () =
       Dream.log "Store error: %a" Store.Git.pp_error err;
       failwith "err"
 
-let info = Irmin_git_unix.info
-
-let path2 = "git://github.com/mirage/ocaml-git.git"
-
 (* Syncing resets the repository and pulls in the new data from the specified remote. *)
-(* let sync repo path = 
-  Printf.printf "================ %s\n%!" path;
+let sync repo path = 
   let* () = clear_repo () in
   let* t = Store.main repo in
   let* remote = Store.remote path in
@@ -54,21 +49,26 @@ let path2 = "git://github.com/mirage/ocaml-git.git"
   check_status status;
   let+ readme = Store.get t [ "README.md" ] in
   Printf.printf "%s\n%!" readme;
-  "Done" *)
+  "Done"
 
-let sync repo path = 
-  Printf.printf "================ %s\n%!" path;
-  let* () = clear_repo () in
-  let* t = Store.of_branch repo "master" in
-  let* upstream = Store.remote path2 in
-  let* _ = Sync.pull_exn t upstream `Set in
+(* To test why sync is not working *)
+let info = Irmin_git_unix.info
+let path2 = "git@github.com:dinakajoy/finance-tracker-app.git"
+
+let test () =
+  let config2 = Irmin_git.config ~bare:true store_location in
+  let* repo2= Store.Repo.v config2 in
+  let* remote = Store.remote path2 in
+  let* t =  Store.main repo2 in
+  let* _ = Sync.pull_exn t remote `Set in
   let* readme = Store.get t [ "README.md" ] in
   let* tree = Store.get_tree t [] in
   let* tree = Store.Tree.add tree [ "BAR.md" ] "Hoho!" in
   let* tree = Store.Tree.add tree [ "FOO.md" ] "Hihi!" in
   let+ () = Store.set_tree_exn t ~info:(info "merge") [] tree in
-  Printf.printf "%s\n%!" readme;
-  "Done"
+  Printf.printf "%s\n%!" readme
 
 let schema repo =
   Lwt.return @@ Graphql_Server.schema repo
+
+let () = Lwt_main.run (test ())
