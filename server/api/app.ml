@@ -42,33 +42,17 @@ let clear_repo () =
 
 (* Syncing resets the repository and pulls in the new data from the specified remote. *)
 let sync repo path = 
+  Mirage_crypto_rng_unix.use_default ();
+  let happy = Happy_eyeballs_lwt.create () in
+  let* ctx = Git_unix.ctx happy in
   let* () = clear_repo () in
   let* t = Store.main repo in
-  let* remote = Store.remote path in
+  let* remote = Store.remote ~ctx path in
   let* status = Sync.pull t remote `Set in
   check_status status;
   let+ readme = Store.get t [ "README.md" ] in
   Printf.printf "%s\n%!" readme;
   "Done"
 
-(* To test why sync is not working *)
-let info = Irmin_git_unix.info
-let path2 = "git@github.com:dinakajoy/finance-tracker-app.git"
-
-let test () =
-  let config2 = Irmin_git.config ~bare:true store_location in
-  let* repo2= Store.Repo.v config2 in
-  let* remote = Store.remote path2 in
-  let* t =  Store.main repo2 in
-  let* _ = Sync.pull_exn t remote `Set in
-  let* readme = Store.get t [ "README.md" ] in
-  let* tree = Store.get_tree t [] in
-  let* tree = Store.Tree.add tree [ "BAR.md" ] "Hoho!" in
-  let* tree = Store.Tree.add tree [ "FOO.md" ] "Hihi!" in
-  let+ () = Store.set_tree_exn t ~info:(info "merge") [] tree in
-  Printf.printf "%s\n%!" readme
-
 let schema repo =
   Lwt.return @@ Graphql_Server.schema repo
-
-let () = Lwt_main.run (test ())

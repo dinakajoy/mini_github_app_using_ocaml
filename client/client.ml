@@ -14,6 +14,14 @@ let save_repo req_body =
   Shared.post_data url req_body
 
 let set_repo _ = 
+   (* Update the submit button state *)
+  let () =
+    match submit_btn with
+    | Some v -> 
+        El.set_prop (El.Prop.jstr (Jstr.v "innerHTML")) (Jstr.v "Loading...") v;
+        El.set_prop (El.Prop.bool (Jstr.v "disabled")) true v
+    | None -> ()
+  in
   let input =  (Document.find_el_by_id G.document) (Jstr.v "input") in
   match input with
   | Some element -> 
@@ -29,5 +37,5 @@ let () =
   Shared.set_date ();
   let submit =  submit_btn in
   match submit with
-  | Some el ->  ignore(Ev.listen Ev.click set_repo (El.as_target el));
+  | Some el ->  ignore(Ev.listen Ev.click set_repo (El.as_target el))
   | None -> ()

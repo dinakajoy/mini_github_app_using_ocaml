@@ -1,5 +1,5 @@
 (library
  (name app)
- (libraries dream irmin-git.unix irmin-graphql.unix cohttp-lwt-unix lwt)
+ (libraries dream irmin irmin-git.unix irmin-graphql.unix cohttp-lwt-unix lwt)
  (preprocess
   (pps ppx_irmin)))

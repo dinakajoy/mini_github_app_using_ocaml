@@ -2,6 +2,8 @@
 
 A simple app to test out `irmin-graphql`, `dream` and `js_of_ocaml`
 
+<img src="./mini-github-rec.gif" alt="Demo">
+
 ## How to setup the project
 - clone the repository
 - Run `make install` to install all project dependencies
@@ -24,11 +26,9 @@ A simple app to test out `irmin-graphql`, `dream` and `js_of_ocaml`
         }
       }
     }
-    master {
-      name
+    main {
       tree {
-        get_contents(key: "README.md") {
-          key
+        get_contents(path:"/README.md") {
           metadata
           value
           hash
