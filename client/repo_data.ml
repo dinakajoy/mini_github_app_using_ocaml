@@ -2,8 +2,8 @@ open Brr
 open Yojson.Basic
 open Omd
 
-let get_string key l =
-  match List.assoc key l with `String s -> s | _ -> raise Not_found
+(* let get_string key l =
+  match List.assoc key l with `String s -> s | _ -> raise Not_found *)
 
 let find t path =
   let rec aux j p = match p, j with

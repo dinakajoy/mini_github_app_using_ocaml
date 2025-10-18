@@ -1,6 +1,6 @@
 opam-version: "2.0"
 
-synopsis: "A mini-github applicatio"
+synopsis: "A mini-github application"
 description: "This application is a sample project on how to combine irmin-graphql with dream and display queries on he browser using js_of_ocaml"
 
 license: "MIT"
@@ -11,14 +11,18 @@ author: "Odinaka Joy <dinakajoy@gmail.com> and Patrick Ferris <pf341@patricoferr
 maintainer: "Odinaka Joy <dinakajoy@gmail.com> and Patrick Ferris <pf341@patricoferris.com>"
 
 depends: [
-  "dream" {= "1.0.0~alpha2"}
-  "dune" {>= "2.8.0"} 
-  "js_of_ocaml-lwt" {= "3.11.0"}
+  "ocaml" {>= "4.14.1"}
+  "dune" {>= "2.9.0"}
+  "dream"
+  "js_of_ocaml"
+  "js_of_ocaml-lwt"
   "js_of_ocaml-ppx"
-  "yojson" {>= "1.7.0"}
-  "brr" {>= "0.0.2"}
-  "omd" {>= "2.0.0~alpha2"}
-  "irmin" {= "2.9.1"}
-  "irmin-unix" {= "2.9.1"}
-  "ocaml" {>= "4.13.1"}
+  "yojson"
+  "brr"
+  "omd"
+  "cohttp-lwt-unix"
+  "lwt"
+  "irmin" 
+  "irmin-graphql" 
+  "irmin-git"
 ]
